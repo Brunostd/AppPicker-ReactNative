@@ -1,117 +1,63 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import {Picker} from '@react-native-picker/picker';
+import React, {Component} from 'react';
+import {SafeAreaView, StyleSheet, Text} from 'react-native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+interface MyPickerStates {
+  pizza: number;
+  pizzas: MyPizza[];
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+interface MyPizza {
+  key: number;
+  value: number;
+  name: string;
+  valor: string;
+}
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+class App extends Component<{}, MyPickerStates> {
+  constructor(props: {}) {
+    super(props);
+    let auxMyPizzas: MyPizza[] = [
+      {key: 1, value: 1, name: 'calabresa', valor: 'R$ 34,50'},
+      {key: 2, value: 2, name: 'portuguesa', valor: 'R$ 38,50'},
+      {key: 3, value: 3, name: 'quatro queijos', valor: 'R$ 47,50'},
+    ];
+    this.state = {
+      pizza: 0,
+      pizzas: auxMyPizzas,
+    };
+  }
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  render(): React.ReactNode {
+    let pickerPizzas = this.state.pizzas.map((v, k) => {
+      return <Picker.Item key={k} value={k} label={v.name} />;
+    });
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.logo}>Menu Pizza</Text>
+        <Picker
+          selectedValue={this.state.pizza}
+          onValueChange={(sabor, itemIndex) => this.setState({pizza: sabor})}>
+          {pickerPizzas}
+        </Picker>
+        <Text>Você escolheu: {this.state.pizzas[this.state.pizza].name}</Text>
+        <Text>Valor da pizza: {this.state.pizzas[this.state.pizza].valor}</Text>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  logo: {
+    padding: 16,
+    fontWeight: 'bold',
+    fontSize: 28,
+    textAlign: 'center',
+    color: 'black',
   },
 });
 
